@@ -11,7 +11,7 @@
 
 using std::vector;
 
-void clus_counts(char* fin, char* fout) {
+void clus_counts(char* fin, char* fout, int min, int max) {
     TFile* file = new TFile(fin);
     TTreeReader reader("trees_DV_", file);
 
@@ -31,7 +31,7 @@ void clus_counts(char* fin, char* fout) {
         int ct = 0;
         for (auto i = 0; i < el1s->size(); i++) {
             double energy = el1s->at(i) + el2s->at(i) + el3s->at(i) + el4s->at(i) + hl1s->at(i) + hl2s->at(i) + hl3s->at(i) + hl4s->at(i);
-            if (energy > 40 && energy < 120) ct++;
+            if (energy > min && energy < max) ct++;
         }
         counts->Fill(ct);
     }
@@ -49,6 +49,8 @@ void clus_counts(char* fin, char* fout) {
 
 # ifndef __CINT__
 int main(int argc, char** argv) {
-    clus_counts(argv[1], argv[2]);
+    int min = (int) strtol(argv[3], NULL, 10);
+    int max = (int) strtol(argv[4], NULL, 10);
+    clus_counts(argv[1], argv[2], min, max);
 }
 # endif
